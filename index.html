@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Elevator</title>
+    <link rel="stylesheet" type="text/css" href="../Desktop/elevator/src/css/elevatorStyle.css">
+</head>
+<body>
+<div class="container">
+    <div class="inner">
+
+    </div>
+</div>
+
+
+<script type="text/template" id="elevator-template">
+    <div style="height:<%= floorLength*55 + 5 %>px;" class="column">
+
+        <% for(var i= 1 ; i <= floorLength; i++) { %>
+        <div class="buttonWrapper">
+            <button><%= floorLength+1-i %>층</button>
+        </div>
+        <% } %>
+    </div>
+
+    <% for(var j =1 ; j<= elevatorNumber; j++) { %>
+    <div class="column elevatorWrapper" style="height:<%= floorLength*55 + 5 %>px;">
+        <% for(var i= 1 ; i <= floorLength; i++) { %>
+        <div class="floor"></div>
+        <% } %>
+    </div>
+    <% } %>
+</script>
+
+<script src="../Desktop/elevator/src/js/library/jquery-3.3.1.min.js"></script>
+
+<script src="../Desktop/elevator/src/js/library/underscore-min.js"></script>
+
+<script src="../Desktop/elevator/src/js/index.js"></script>
+
+
+</body>
+</html>
