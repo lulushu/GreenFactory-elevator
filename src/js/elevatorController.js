@@ -7,18 +7,20 @@ function ElevatorController(ElevatorNumber, floorNumber) {
     console.log(this._oCollection);
 }
 
-ElevatorController.prototype= {
+ElevatorController.prototype = {
 
-    _init : function () {
+    _init: function () {
         this._oCollection = new ElevatorCollection(this._elevatorNumber);
         this._oView = new ElevatorView(this._elevatorNumber, this._floorNumber);
         this._$View = $(this._oView);
+        this._$Collection = $(this._oCollection);
         this._oView.renderElevator(this._oCollection.getCurrentPostion());
     },
 
     _cacheEventHandlers: function () {
         this._eventHandlers = {};
         this._eventHandlers._onClickButton = $.proxy(this._onClickButton, this);
+        this._eventHandlers._onFindElevator = $.proxy(this._onFindElevator, this);
     },
 
     _assignEvent: function () { //바로 다른객체들의 method 부르지 말자...
@@ -34,11 +36,17 @@ ElevatorController.prototype= {
         // this._$Model.on("returnMoney", $.proxy(this.onReturnMoney, this)); //
         //
         // this._$View.on("returnMoney", this._eventHandlers._onClickReturnMoney);  //수정해야함.
+        this._$Collection.on("findElevator", this._eventHandlers._onFindElevator);
         this._$View.on("clickButton", this._eventHandlers._onClickButton);
     },
 
     _onClickButton: function (event) {
-       console.log(event.floor);
+        console.log(event.floor);
+        this._oCollection.findNearestElevator(event.floor);
+    },
+
+    _onFindElevator: function (event){
+        this._oView.activateElevator(event.elevator, event.floor);
     }
 
 };

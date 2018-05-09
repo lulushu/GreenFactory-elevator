@@ -43,8 +43,22 @@ ElevatorView.prototype = {
     },
 
     _onClickButton: function (event) {
-        var id =$(event.target).attr("id");
+        var id =$(event.target).data("floor");
         $(this).trigger({type: "clickButton", floor: id});
         $(event.target).addClass("active");
+    },
+
+    activateElevator:function(elevatorNum, targetFloor){
+        $("[data-elevator="+elevatorNum+"]").find("div").removeClass("elevator");
+        $("[data-elevator="+elevatorNum+"]").find("[data-floor="+targetFloor+"]").addClass("elevator");
+        console.log("target", elevatorNum);
     }
+
+    // onArriveElevator: function(){
+    //
+    // },
+    //
+    // _deActiveButton: function(){
+    //
+    // }
 };
