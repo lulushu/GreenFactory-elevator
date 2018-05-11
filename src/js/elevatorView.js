@@ -1,4 +1,4 @@
-function ElevatorView (ElevatorNumber, floorNumber){
+function ElevatorView(ElevatorNumber, floorNumber) {
     this._elevatorNumber = ElevatorNumber;
     this._floorNumber = floorNumber;
     this._renderContent();
@@ -6,8 +6,8 @@ function ElevatorView (ElevatorNumber, floorNumber){
 }
 
 ElevatorView.prototype = {
-    _renderContent: function(){
-        var template ={
+    _renderContent: function () {
+        var template = {
             elevator: _.template($('#elevator-template').html())
         };
 
@@ -16,8 +16,8 @@ ElevatorView.prototype = {
     },
 
     renderElevator: function (data) {
-        for(elevator in data){
-            $($("#"+elevator).find(".floor").get().reverse()).eq(data[elevator]-1).addClass("elevator")
+        for (elevator in data) {
+            $($("#" + elevator).find(".floor").get().reverse()).eq(data[elevator] - 1).addClass("elevator")
         }
     },
 
@@ -43,16 +43,46 @@ ElevatorView.prototype = {
     },
 
     _onClickButton: function (event) {
-        var id =$(event.target).data("floor");
+        var id = $(event.target).data("floor");
         $(this).trigger({type: "clickButton", floor: id});
         $(event.target).addClass("active");
     },
 
-    activateElevator:function(elevatorNum, targetFloor){
-        $("[data-elevator="+elevatorNum+"]").find("div").removeClass("elevator");
-        $("[data-elevator="+elevatorNum+"]").find("[data-floor="+targetFloor+"]").addClass("elevator");
+    activateElevator: function (elevatorNum, targetFloor, currentFloor) {
+
+
+        if (targetFloor > currentFloor) {
+
+            this.setIntervalX(currentFloor, Math.abs((targetFloor - currentFloor)), elevatorNum)
+        } else if (targetFloor < currentFloor) {
+
+            this.setIntervalY(currentFloor, Math.abs((targetFloor - currentFloor)), elevatorNum)
+        }
+
+
+        // $("[data-elevator="+elevatorNum+"]").find("div").removeClass("elevator");
+        // $("[data-elevator="+elevatorNum+"]").find("[data-floor="+targetFloor+"]").addClass("elevator");
         console.log("target", elevatorNum);
-    }
+    },
+
+    setIntervalX: function (currentFloor, repetitions, elevatorNum) {
+        console.log(currentFloor, repetitions, elevatorNum);
+        var current = currentFloor;
+        var x = 0;
+        var intervalID = window.setInterval(function () {
+            current++;
+            $("[data-elevator=" + elevatorNum + "]").find("div").removeClass("elevator");
+            $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("elevator");
+
+            if (++x === repetitions) {
+
+                window.clearInterval(intervalID);
+            }
+        }, 1000);
+    },
+
+
+
 
     // onArriveElevator: function(){
     //

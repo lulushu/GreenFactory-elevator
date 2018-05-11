@@ -46,7 +46,7 @@ ElevatorController.prototype = {
     },
 
     _onFindElevator: function (event){
-        this._oView.activateElevator(event.elevator, event.floor);
+        this._oView.activateElevator(event.elevator, event.floor, event.current);
     }
 
 };
