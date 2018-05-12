@@ -16,7 +16,7 @@ ElevatorView.prototype = {
     },
 
     renderElevator: function (data) {
-        for (elevator in data) {
+        for (var elevator in data) {
             $($("#" + elevator).find(".floor").get().reverse()).eq(data[elevator] - 1).addClass("elevator")
         }
     },
@@ -42,6 +42,9 @@ ElevatorView.prototype = {
     },
 
     _onClickButton: function (event) {
+        if($(event.target).hasClass("active")){
+            return;
+        }
         var id = $(event.target).data("floor");
         $(this).trigger({type: "clickButton", floor: id});
         $(event.target).addClass("active");
