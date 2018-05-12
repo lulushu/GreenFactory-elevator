@@ -42,7 +42,7 @@ ElevatorView.prototype = {
     },
 
     _onClickButton: function (event) {
-        if($(event.target).hasClass("active")){
+        if ($(event.target).hasClass("active")) {
             return;
         }
         var id = $(event.target).data("floor");
@@ -60,6 +60,14 @@ ElevatorView.prototype = {
         }
     },
 
+    activateElevator2: function (targetFloor) {
+        console.log("hihi");
+        setTimeout(function () {
+            $("[data-floor=" + targetFloor + "]").removeClass("active");
+        }, 0);
+        // $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + targetFloor + "]").removeClass("active");
+    },
+
     setIntervalX: function (currentFloor, targetFloor, elevatorNum) {
         var current = currentFloor;
         var repetitions = Math.abs((targetFloor - currentFloor));
@@ -67,7 +75,7 @@ ElevatorView.prototype = {
         var self = this;
         $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("active");
         var intervalID = window.setInterval(function () {
-            console.log("interval")
+            console.log(intervalID);
             current++;
             $("[data-elevator=" + elevatorNum + "]").find("div").removeClass("elevator").removeClass("active");
             $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("elevator").addClass("active");
@@ -86,7 +94,7 @@ ElevatorView.prototype = {
         var self = this;
         $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("active");
         var intervalID = window.setInterval(function () {
-            console.log("interval")
+            console.log(intervalID);
             current--;
             $("[data-elevator=" + elevatorNum + "]").find("div").removeClass("elevator").removeClass("active");
             $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("elevator").addClass("active");

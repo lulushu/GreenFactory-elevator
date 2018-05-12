@@ -2,6 +2,7 @@ function ElevatorModel(elevatorNum) {
     this._elevatorNumber = elevatorNum;
     this._currentPosition = null;
     this._status = "inactive";
+    this.isMoiving = false;
     this._init()
 }
 
