@@ -33,7 +33,7 @@ ElevatorView.prototype = {
 
     activateButton: function (targetFloor) {
         if (this._$buttonElements[targetFloor].hasClass("active")) {
-            return;
+            return false;
         }
         $(this).trigger({type: "clickButton", floor: targetFloor});
         this._$buttonElements[targetFloor].addClass("active");

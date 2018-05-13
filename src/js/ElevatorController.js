@@ -9,11 +9,20 @@ function ElevatorController(ElevatorNumber, floorNumber) {
 ElevatorController.prototype = {
 
     activateButton: function (floorNumber) {
+        var targetFloorNumber = parseInt(floorNumber);
+        if (targetFloorNumber <= 0 || targetFloorNumber > this._floorNumber) {
+            console.log("not valid number");
+            return false;
+        }
         this._oView.activateButton(floorNumber);
-        return;
     },
 
     isButtonActivated: function (floorNumber) {
+        var targetFloorNumber = parseInt(floorNumber);
+        if (targetFloorNumber <= 0 || targetFloorNumber > this._floorNumber) {
+            console.log("not valid number");
+            return false;
+        }
         var isActivated = this._oView.isButtonActivated(floorNumber);
         console.log(isActivated);
         return isActivated;

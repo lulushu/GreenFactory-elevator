@@ -40,7 +40,7 @@ ElevatorCollection.prototype = {
         var intervalID = window.setInterval(function () {
             console.log("interval");
             var targetFloor = self.targetFloors[0];
-            var nearestDistance = self._getNearestDistance2(targetFloor);
+            var nearestDistance = self._getNearestDistance(targetFloor);
             var targetElevatorNumber = self._getTargetElevatorNumber(targetFloor, nearestDistance);
             if (targetElevatorNumber !== null) {
                 window.clearInterval(intervalID);
@@ -53,9 +53,10 @@ ElevatorCollection.prototype = {
 
     // TODO 거리값 구하는 함수들 3개 중복되는 코드들 많음...
 
-    _getNearestDistance2: function (targetFloor) {
+    _getNearestDistance: function (targetFloor) {
         var distanceValues = [];
         var modelData;
+
         for (var elevatorNumber in this.elevators) {
             modelData = this.elevators[elevatorNumber].get(['status', 'currentPosition']);
             if (modelData.status === 'inactive') {
@@ -63,43 +64,25 @@ ElevatorCollection.prototype = {
             }
         }
         console.log(distanceValues);
-        return Math.min.apply(Math, distanceValues);
 
-    },
-
-    _getNearestDistance: function (targetFloor) {
-        var distanceValues = [];
-        var statusValues = [];
-        var modelData;
-        for (var elevatorNumber in this.elevators) {
-            modelData = this.elevators[elevatorNumber].get(['status', 'currentPosition']);
-            distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
-            if (modelData.status === 'inactive') {
-                statusValues.push(modelData.status);
-            } else {
-                statusValues.push(modelData.status);
-            }
-        }
-        for (var i = 0; i < statusValues.length; i++) {
-            if (statusValues[i] === 'active') {
-                distanceValues[i] = Infinity;
-            }
-        }
-
-        console.log("status값들", statusValues);
-        console.log("거리값들", distanceValues);
-        return Math.min.apply(Math, distanceValues);
+        //////
+        return Math.min.apply(Math, distanceValues); //todo 최소값 원리 알아야함..
 
     },
 
     _getNearestDistance3: function (targetFloor) {
         var distanceValues = [];
         var modelData;
+        //////
+
         for (var elevatorNumber in this.elevators) {
             modelData = this.elevators[elevatorNumber].get(['status', 'currentPosition']);
             distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
         }
         console.log("거리값들", distanceValues);
+
+
+        //////////
         return Math.min.apply(Math, distanceValues);
 
     },
@@ -126,7 +109,6 @@ ElevatorCollection.prototype = {
             return;
         }
         var nearestDistance = this._getNearestDistance(targetFloor);
-
         var targetElevatorNumber = this._getTargetElevatorNumber(targetFloor, nearestDistance);
         console.log("타겟엘리베이터는", targetElevatorNumber);
         if (targetElevatorNumber !== null) {
@@ -161,5 +143,39 @@ ElevatorCollection.prototype = {
     _setInactiveElevator: function (elevatorNum) {
         this.elevators[elevatorNum].set({status: 'inactive'})
     }
+
 };
+
+// _getNearestDistance: function (targetFloor, ) {
+//     var distanceValues = [];
+//     var modelData;
+//     var statusValues = [];
+//     for (var elevatorNumber in this.elevators) {
+//         modelData = this.elevators[elevatorNumber].get(['status', 'currentPosition']);
+//         distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
+//
+//         ////
+//         if (modelData.status === 'inactive') {
+//             statusValues.push(modelData.status);
+//         } else {
+//             statusValues.push(modelData.status);
+//         }
+//         ///////
+//     }
+//
+//     /////
+//     for (var i = 0; i < statusValues.length; i++) {
+//         if (statusValues[i] === 'active') {
+//             distanceValues[i] = Infinity;
+//         }
+//     }
+//
+//     //////
+//     console.log("status값들", statusValues);
+//     console.log("거리값들", distanceValues);
+//
+//     ////
+//     return Math.min.apply(Math, distanceValues);
+//
+// },
 
