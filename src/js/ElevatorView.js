@@ -6,19 +6,44 @@ function ElevatorView(ElevatorNumber, floorNumber) {
 }
 
 ElevatorView.prototype = {
+
+    renderElevator: function (data) {
+        var reversedData;
+        for (var elevatorNumber in data) {
+            reversedData = this._$elevatorElements[elevatorNumber].find(".floor").get().reverse();
+            $(reversedData).eq(data[elevatorNumber] - 1).addClass("elevator");
+        }
+    },
+
+    activateElevator: function (elevatorNum, targetFloor, currentFloor) {
+        var distance = (currentFloor - targetFloor);
+        this._moveElevator(currentFloor, distance, elevatorNum)
+    },
+
+    onTheSameFloor: function (targetFloor) {
+        var self = this;
+        setTimeout(function () {
+            self._$buttonElements[targetFloor].removeClass("active");
+        }, 0);
+    },
+
+    isButtonActivated: function (targetFloor) {
+        return this._$buttonElements[targetFloor].hasClass("active");
+    },
+
+    activateButton: function (targetFloor) {
+        if (this._$buttonElements[targetFloor].hasClass("active")) {
+            return;
+        }
+        $(this).trigger({type: "clickButton", floor: targetFloor});
+        this._$buttonElements[targetFloor].addClass("active");
+    },
+
     _renderContent: function () {
         var template = {
             elevator: _.template($('#elevator-template').html())
         };
         $(".content").html(template.elevator({floorLength: this._floorNumber, elevatorNumber: this._elevatorNumber}));
-    },
-
-    renderElevator: function (data) {
-        var reversedData;
-        for (var elevator in data) {
-            reversedData = $("#" + elevator).find(".floor").get().reverse();
-            $(reversedData).eq(data[elevator] - 1).addClass("elevator");
-        }
     },
 
     _init: function () {
@@ -60,54 +85,23 @@ ElevatorView.prototype = {
         $eventTarget.addClass("active");
     },
 
-    activateElevator: function (elevatorNum, targetFloor, currentFloor) {
-        var distance = Math.abs((targetFloor - currentFloor));
-        if (targetFloor > currentFloor) {
-            this.setIntervalX(currentFloor, distance, elevatorNum)
-        } else if (targetFloor < currentFloor) {
-            this.setIntervalY(currentFloor, distance, elevatorNum)
-        }
-    },
-
-    setIntervalX: function (currentFloor, distance, elevatorNum) {
+    _moveElevator: function (currentFloor, distance, elevatorNum) {
         var current = currentFloor;
+        var absoluteDistance = Math.abs(distance);
         var repetitions = 0;
+        var criterion = distance > 0 ? -1 : 1;
         var self = this;
         this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
         var intervalID = window.setInterval(function () {
             console.log("interval"); // todo 확인용 삭제해야함
-            current++;
+            current += criterion;
             self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
             self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
-            if (++repetitions === distance) {
+            if (++repetitions === absoluteDistance) {
                 window.clearInterval(intervalID);
                 self._onArriveFloor(elevatorNum, current);
             }
         }, 1000);
-    },
-
-    setIntervalY: function (currentFloor, distance, elevatorNum) {
-        var current = currentFloor;
-        var repetitions = 0;
-        var self = this;
-        this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
-        var intervalID = window.setInterval(function () { //todo interval 파악하기..
-            console.log("interval"); // todo 확인용 삭제해야함
-            current--;
-            self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
-            self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
-            if (++repetitions === distance) {
-                window.clearInterval(intervalID);
-                self._onArriveFloor(elevatorNum, current);
-            }
-        }, 1000);
-    },
-
-    onTheSameFloor: function (targetFloor) {
-        var self = this;
-        setTimeout(function () {
-            self._$buttonElements[targetFloor].removeClass("active");
-        }, 0);
     },
 
     _onArriveFloor: function (elevatorNum, targetFloor) {

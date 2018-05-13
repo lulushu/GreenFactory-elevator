@@ -1,15 +1,12 @@
 function ElevatorModel(elevatorNum) {
     this._elevatorNumber = elevatorNum;
     this._currentPosition = null;
-    this._status = "inactive";
+    this._status = null;
     this._active = false; // TODO status값 교체하자...
     this._init()
 }
 
 ElevatorModel.prototype = {
-    _init: function () {
-        this._currentPosition = 1;
-    },
 
     set: function (dataObject) {
         for (var property in dataObject) {
@@ -23,6 +20,10 @@ ElevatorModel.prototype = {
             dataProperty[dataArray[i]] = this["_" + dataArray[i]]
         }
         return dataProperty;
-    }
+    },
 
+    _init: function () {
+        this._currentPosition = 1;
+        this._status = 'inactive';
+    }
 };

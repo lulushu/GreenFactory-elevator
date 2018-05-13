@@ -8,27 +8,37 @@ function ElevatorController(ElevatorNumber, floorNumber) {
 
 ElevatorController.prototype = {
 
+    activateButton: function (floorNumber) {
+        this._oView.activateButton(floorNumber);
+        return;
+    },
+
+    isButtonActivated: function (floorNumber) {
+        var isActivated = this._oView.isButtonActivated(floorNumber);
+        console.log(isActivated);
+        return isActivated;
+    },
+
     _init: function () {
         this._oCollection = new ElevatorCollection(this._elevatorNumber);
         this._oView = new ElevatorView(this._elevatorNumber, this._floorNumber);
         this._$View = $(this._oView);
         this._$Collection = $(this._oCollection);
-        this._oView.renderElevator(this._oCollection.getInitialPostion());
+        this._oView.renderElevator.call(this._oView, this._oCollection.getInitialPostion());
     },
 
     _cacheEventHandlers: function () {
         this._eventHandlers = {};
         this._eventHandlers._onClickButton = $.proxy(this._onClickButton, this);
         this._eventHandlers._onFindElevator = $.proxy(this._onFindElevator, this);
-        this._eventHandlers._onAlreadyElevator = $.proxy(this._onAlreadyElevator, this);
+        this._eventHandlers._onAlreadyArrivedElevator = $.proxy(this._onAlreadyArrivedElevator, this);
         this._eventHandlers._onArriveFloor = $.proxy(this._onArriveFloor, this);
     },
 
     _assignEvent: function () {
         this._$Collection.on("findElevator", this._eventHandlers._onFindElevator);
-        this._$Collection.on("alreadyElevator", this._eventHandlers._onAlreadyElevator);
+        this._$Collection.on("alreadyElevator", this._eventHandlers._onAlreadyArrivedElevator);
         this._$View.on("clickButton", this._eventHandlers._onClickButton);
-
         for (var i = 1; i <= this._elevatorNumber; i++) {
             this._$View.on("arrive" + i, this._eventHandlers._onArriveFloor);
         }
@@ -42,7 +52,7 @@ ElevatorController.prototype = {
         this._oView.activateElevator(event.elevator, event.floor, event.current);
     },
 
-    _onAlreadyElevator: function (event) {
+    _onAlreadyArrivedElevator: function (event) {
         this._oView.onTheSameFloor(event.floor);
     },
 
