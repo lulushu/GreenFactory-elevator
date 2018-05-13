@@ -86,7 +86,7 @@ ElevatorView.prototype = {
         var self = this;
         $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("active");
         var intervalID = window.setInterval(function () {
-            console.log("interval")
+            console.log("interval");
             current--;
             $("[data-elevator=" + elevatorNum + "]").find("div").removeClass("elevator").removeClass("active");
             $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("elevator").addClass("active");
@@ -101,7 +101,6 @@ ElevatorView.prototype = {
         setTimeout(function(){
             $("[data-btn=" + targetFloor + "]").removeClass("active");
         },0);
-        // $("[data-btn=" + targetFloor + "]").removeClass("active");
     },
 
     _onArriveFloor: function (elevatorNum, targetFloor) {

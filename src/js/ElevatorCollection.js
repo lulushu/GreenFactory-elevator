@@ -88,26 +88,11 @@ ElevatorCollection.prototype = {
 
     _getNearestDistance3: function (targetFloor) {
         var distanceValues = [];
-        // var statusValues = [];
         var modelData;
         for (var elevator1 in this.elevators) {
             modelData = this.elevators[elevator1].get(['status', 'currentPosition']);
-            // if (modelData.status === 'inactive') {
             distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
-            // }
-            // if(modelData.status === 'inactive'){
-            //     statusValues.push(modelData.status);
-            // }else{
-            //     statusValues.push(modelData.status);
-            // }
         }
-        // for(var i =0; i<statusValues.length; i++){
-        //     if(statusValues[i] === 'active'){
-        //         distanceValues[i] = 10;
-        //     }
-        // }
-
-        // console.log("status값들", statusValues);
         console.log("거리값들",distanceValues);
         return Math.min.apply(Math, distanceValues);
 
@@ -116,14 +101,12 @@ ElevatorCollection.prototype = {
     _getTargetElevatorNumber: function (targetFloor, nearestDistance) {
         var movableElevators = [];
         var modelData;
-        // if(nearestDistance >0) {
            for (var elevator2 in this.elevators) {
                modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
                if (Math.abs(targetFloor - modelData.currentPosition) == nearestDistance && modelData.status === 'inactive') {
                    movableElevators.push(modelData.elevatorNumber);
                }
            }
-        // }
 
         if (movableElevators.length > 0) {
             return Math.min.apply(Math, movableElevators);
@@ -141,10 +124,7 @@ ElevatorCollection.prototype = {
             return;
         }
         var nearestDistance = this._getNearestDistance(targetFloor);
-        // if(nearestDistance === 0){
-        //     this._notifyAlreadyElevatorArrived(targetFloor);
-        //     return;
-        // }
+
         var targetElevatorNumber = this._getTargetElevatorNumber(targetFloor, nearestDistance);
         console.log("타겟엘리베이터는", targetElevatorNumber);
         if (targetElevatorNumber !== null) {
