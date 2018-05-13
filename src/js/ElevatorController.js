@@ -1,4 +1,10 @@
 function ElevatorController(ElevatorNumber, floorNumber) {
+    if (ElevatorNumber > 4 || ElevatorNumber < 0) {
+        return;
+    }
+    if (floorNumber > 5 || floorNumber < 0) {
+        return;
+    }
     this._elevatorNumber = ElevatorNumber;
     this._floorNumber = floorNumber;
     this._init();
@@ -12,7 +18,7 @@ ElevatorController.prototype = {
         var targetFloorNumber = parseInt(floorNumber);
         if (targetFloorNumber <= 0 || targetFloorNumber > this._floorNumber) {
             console.log("not valid number");
-            return false;
+            return;
         }
         this._oView.activateButton(floorNumber);
     },
@@ -23,9 +29,7 @@ ElevatorController.prototype = {
             console.log("not valid number");
             return false;
         }
-        var isActivated = this._oView.isButtonActivated(floorNumber);
-        console.log(isActivated);
-        return isActivated;
+        return this._oView.isButtonActivated(floorNumber);
     },
 
     _init: function () {

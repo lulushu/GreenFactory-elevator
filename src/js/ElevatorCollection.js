@@ -146,36 +146,3 @@ ElevatorCollection.prototype = {
 
 };
 
-// _getNearestDistance: function (targetFloor, ) {
-//     var distanceValues = [];
-//     var modelData;
-//     var statusValues = [];
-//     for (var elevatorNumber in this.elevators) {
-//         modelData = this.elevators[elevatorNumber].get(['status', 'currentPosition']);
-//         distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
-//
-//         ////
-//         if (modelData.status === 'inactive') {
-//             statusValues.push(modelData.status);
-//         } else {
-//             statusValues.push(modelData.status);
-//         }
-//         ///////
-//     }
-//
-//     /////
-//     for (var i = 0; i < statusValues.length; i++) {
-//         if (statusValues[i] === 'active') {
-//             distanceValues[i] = Infinity;
-//         }
-//     }
-//
-//     //////
-//     console.log("status값들", statusValues);
-//     console.log("거리값들", distanceValues);
-//
-//     ////
-//     return Math.min.apply(Math, distanceValues);
-//
-// },
-

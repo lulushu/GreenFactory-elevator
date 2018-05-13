@@ -93,7 +93,6 @@ ElevatorView.prototype = {
         var self = this;
         this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
         var intervalID = window.setInterval(function () {
-            console.log("interval"); // todo 확인용 삭제해야함
             current += criterion;
             self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
             self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
