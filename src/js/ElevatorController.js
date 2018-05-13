@@ -20,11 +20,13 @@ ElevatorController.prototype = {
         this._eventHandlers = {};
         this._eventHandlers._onClickButton = $.proxy(this._onClickButton, this);
         this._eventHandlers._onFindElevator = $.proxy(this._onFindElevator, this);
+        this._eventHandlers._onAlreadyElevator = $.proxy(this._onAlreadyElevator, this);
         this._eventHandlers._onArriveFloor = $.proxy(this._onArriveFloor, this);
     },
 
     _assignEvent: function () {
         this._$Collection.on("findElevator", this._eventHandlers._onFindElevator);
+        this._$Collection.on("alreadyElevator", this._eventHandlers._onAlreadyElevator);
         this._$View.on("clickButton", this._eventHandlers._onClickButton);
 
         for (var i = 1; i <= this._elevatorNumber; i++) {
@@ -38,6 +40,10 @@ ElevatorController.prototype = {
 
     _onFindElevator: function (event) {
         this._oView.activateElevator(event.elevator, event.floor, event.current);
+    },
+
+    _onAlreadyElevator: function (event) {
+        this._oView.onTheSameFloor(event.floor);
     },
 
     _onArriveFloor: function (event) {

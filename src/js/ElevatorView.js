@@ -57,8 +57,6 @@ ElevatorView.prototype = {
         } else if (targetFloor < currentFloor) {
 
             this.setIntervalY(currentFloor, targetFloor, elevatorNum)
-        } else if (targetFloor === currentFloor) {
-            this._onTheSameFloor(targetFloor);
         }
     },
 
@@ -99,7 +97,7 @@ ElevatorView.prototype = {
         }, 1000);
     },
 
-    _onTheSameFloor: function(targetFloor){
+    onTheSameFloor: function(targetFloor){
         setTimeout(function(){
             $("[data-btn=" + targetFloor + "]").removeClass("active");
         },0);
