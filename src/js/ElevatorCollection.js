@@ -37,7 +37,7 @@ ElevatorCollection.prototype = {
 
     _findElevatorPerSecond: function () {
         var self = this;
-        var intervalID = window.setInterval(function () {
+        var intervalID = setInterval(function () {
             console.log("interval");
             var targetFloor = self.targetFloors[0];
             var nearestDistance = self._getNearestDistance(targetFloor);

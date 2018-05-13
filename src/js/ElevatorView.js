@@ -92,7 +92,7 @@ ElevatorView.prototype = {
         var criterion = distance > 0 ? -1 : 1;
         var self = this;
         this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
-        var intervalID = window.setInterval(function () {
+        var intervalID = setInterval(function () {
             current += criterion;
             self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
             self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
