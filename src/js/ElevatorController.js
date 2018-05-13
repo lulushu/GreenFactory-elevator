@@ -1,8 +1,8 @@
 function ElevatorController(ElevatorNumber, floorNumber) {
-    if (ElevatorNumber > 4 || ElevatorNumber < 0) {
+    if (ElevatorNumber > 4 || ElevatorNumber < 2) {
         return;
     }
-    if (floorNumber > 5 || floorNumber < 0) {
+    if (floorNumber > 5 || floorNumber < 2) {
         return;
     }
     this._elevatorNumber = ElevatorNumber;
