@@ -42,10 +42,10 @@ ElevatorView.prototype = {
     },
 
     _onClickButton: function (event) {
-        if($(event.target).hasClass("active")){
+        if ($(event.target).hasClass("active")) {
             return;
         }
-        var id = $(event.target).data("floor");
+        var id = $(event.target).data("btn");
         $(this).trigger({type: "clickButton", floor: id});
         $(event.target).addClass("active");
     },
@@ -57,6 +57,8 @@ ElevatorView.prototype = {
         } else if (targetFloor < currentFloor) {
 
             this.setIntervalY(currentFloor, targetFloor, elevatorNum)
+        } else if (targetFloor === currentFloor) {
+            this._onTheSameFloor(targetFloor);
         }
     },
 
@@ -97,9 +99,16 @@ ElevatorView.prototype = {
         }, 1000);
     },
 
+    _onTheSameFloor: function(targetFloor){
+        setTimeout(function(){
+            $("[data-btn=" + targetFloor + "]").removeClass("active");
+        },0);
+        // $("[data-btn=" + targetFloor + "]").removeClass("active");
+    },
+
     _onArriveFloor: function (elevatorNum, targetFloor) {
         $(this).trigger({type: "arrive" + elevatorNum, elevator: elevatorNum});
-        $("[data-floor=" + targetFloor + "]").removeClass("active");
+        $("[data-btn=" + targetFloor + "]").removeClass("active");
         $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + targetFloor + "]").removeClass("active");
     }
 };

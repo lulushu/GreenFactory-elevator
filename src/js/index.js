@@ -1,1 +1,1 @@
-var elevator = new ElevatorController(2,5);
+var elevator = new ElevatorController(4,5);

@@ -34,7 +34,7 @@ ElevatorCollection.prototype = {
         var intervalID = window.setInterval(function () {
             console.log("interval")
             var targetFloor = self.targetFloors[0];
-            var nearestDistance = self._getNearestDistance(targetFloor);
+            var nearestDistance = self._getNearestDistance2(targetFloor);
             var targetElevatorNumber = self._getTargetElevatorNumber(targetFloor, nearestDistance);
             if (targetElevatorNumber !== null) {
                 window.clearInterval(intervalID);
@@ -42,10 +42,10 @@ ElevatorCollection.prototype = {
                 self.targetFloors.shift();
             }
 
-        }, 1000);
+        },1000);
     },
 
-    _getNearestDistance: function (targetFloor) {
+    _getNearestDistance2: function (targetFloor) {
         var distanceValues = [];
         var modelData;
         for (var elevator1 in this.elevators) {
@@ -54,20 +54,44 @@ ElevatorCollection.prototype = {
                 distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
             }
         }
-
+        console.log(distanceValues);
         return Math.min.apply(Math, distanceValues);
+
+    },
+
+    _getNearestDistance: function (targetFloor) {
+        var distanceValues = [];
+        var modelData;
+        for (var elevator1 in this.elevators) {
+            modelData = this.elevators[elevator1].get(['status', 'currentPosition']);
+            // if (modelData.status === 'inactive') {
+                distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
+            // }
+        }
+        console.log(distanceValues);
+        return Math.min.apply(Math, distanceValues);
+
     },
 
     _getTargetElevatorNumber: function (targetFloor, nearestDistance) {
         var movableElevators = [];
         var modelData;
-        for (var elevator2 in this.elevators) {
-            modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
-            if (Math.abs(targetFloor - modelData.currentPosition) == nearestDistance && modelData.status === 'inactive') {
-                movableElevators.push(modelData.elevatorNumber);
+        if(nearestDistance >0) {
+           for (var elevator2 in this.elevators) {
+               modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
+               if (Math.abs(targetFloor - modelData.currentPosition) == nearestDistance && modelData.status === 'inactive') {
+                   movableElevators.push(modelData.elevatorNumber);
+               }
+           }
+        }else{
+            for (var elevator2 in this.elevators) {
+                modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
+                if (Math.abs(targetFloor - modelData.currentPosition) == nearestDistance) {
+                    movableElevators.push(modelData.elevatorNumber);
+                }
             }
         }
-
+        console.log(movableElevators);
         if (movableElevators.length > 0) {
             return Math.min.apply(Math, movableElevators);
         } else {
@@ -97,7 +121,10 @@ ElevatorCollection.prototype = {
             floor: targetFloor,
             current: modelData.currentPosition
         });
-        this.elevators["elevator" + targetElevatorNumber].set({currentPosition: targetFloor, status: 'active'});
+        if(targetFloor !== modelData.currentPosition) {
+            this.elevators["elevator" + targetElevatorNumber].set({currentPosition: targetFloor, status: 'active'});
+        }
+        console.log(this.elevators);
     },
 
     setActive: function (event) {
