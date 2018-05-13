@@ -25,7 +25,7 @@ ElevatorCollection.prototype = {
     },
 
     pushTargetFloor: function (targetFloorNum) {
-        this.targetFloors.push(targetFloorNum); //분리해야 할것 같음...
+        this.targetFloors.push(targetFloorNum); // TODO 분리해야 할것 같음...
         this.findNearestElevator(this.targetFloors[0]);
     },
 
@@ -42,8 +42,10 @@ ElevatorCollection.prototype = {
                 self.targetFloors.shift();
             }
 
-        },1000);
+        }, 1000);
     },
+
+    // TODO 거리값 구하는 함수들 3개 중복되는 코드들 많음...
 
     _getNearestDistance2: function (targetFloor) {
         var distanceValues = [];
@@ -65,23 +67,21 @@ ElevatorCollection.prototype = {
         var modelData;
         for (var elevator1 in this.elevators) {
             modelData = this.elevators[elevator1].get(['status', 'currentPosition']);
-            // if (modelData.status === 'inactive') {
-                distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
-            // }
-            if(modelData.status === 'inactive'){
+            distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
+            if (modelData.status === 'inactive') {
                 statusValues.push(modelData.status);
-            }else{
+            } else {
                 statusValues.push(modelData.status);
             }
         }
-        for(var i =0; i<statusValues.length; i++){
-            if(statusValues[i] === 'active'){
+        for (var i = 0; i < statusValues.length; i++) {
+            if (statusValues[i] === 'active') {
                 distanceValues[i] = 10;
             }
         }
 
         console.log("status값들", statusValues);
-        console.log("거리값들",distanceValues);
+        console.log("거리값들", distanceValues);
         return Math.min.apply(Math, distanceValues);
 
     },
@@ -93,7 +93,7 @@ ElevatorCollection.prototype = {
             modelData = this.elevators[elevator1].get(['status', 'currentPosition']);
             distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
         }
-        console.log("거리값들",distanceValues);
+        console.log("거리값들", distanceValues);
         return Math.min.apply(Math, distanceValues);
 
     },
@@ -101,12 +101,12 @@ ElevatorCollection.prototype = {
     _getTargetElevatorNumber: function (targetFloor, nearestDistance) {
         var movableElevators = [];
         var modelData;
-           for (var elevator2 in this.elevators) {
-               modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
-               if (Math.abs(targetFloor - modelData.currentPosition) == nearestDistance && modelData.status === 'inactive') {
-                   movableElevators.push(modelData.elevatorNumber);
-               }
-           }
+        for (var elevator2 in this.elevators) {
+            modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
+            if (Math.abs(targetFloor - modelData.currentPosition) === nearestDistance && modelData.status === 'inactive') {
+                movableElevators.push(modelData.elevatorNumber);
+            }
+        }
 
         if (movableElevators.length > 0) {
             return Math.min.apply(Math, movableElevators);
@@ -119,7 +119,7 @@ ElevatorCollection.prototype = {
     findNearestElevator: function () {
         var targetFloor = this.targetFloors[0];
         var sameDistance = this._getNearestDistance3(targetFloor);
-        if(sameDistance === 0){
+        if (sameDistance === 0) {
             this._notifyAlreadyElevatorArrived(targetFloor);
             return;
         }
@@ -151,19 +151,19 @@ ElevatorCollection.prototype = {
             floor: targetFloor,
             current: modelData.currentPosition
         });
-        if(targetFloor !== modelData.currentPosition) {
+        if (targetFloor !== modelData.currentPosition) {
             this.elevators["elevator" + targetElevatorNumber].set({currentPosition: targetFloor, status: 'active'});
         }
     },
 
-    setActive: function (event) {
+    setInactive: function (event) {
         setTimeout($.proxy(function (event) {
-            this.addActiveElevator(event.elevatorNum);
+            this.setInactiveElevator(event.elevatorNum);
         }, this), 3000, event);
 
     },
 
-    addActiveElevator: function (elevatorNum) {
+    setInactiveElevator: function (elevatorNum) {
         this.elevators["elevator" + elevatorNum].set({status: 'inactive'})
     }
 };

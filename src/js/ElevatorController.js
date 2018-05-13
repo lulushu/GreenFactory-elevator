@@ -47,7 +47,7 @@ ElevatorController.prototype = {
     },
 
     _onArriveFloor: function (event) {
-        this._oCollection.setActive({elevatorNum: event.elevator});
+        this._oCollection.setInactive({elevatorNum: event.elevator});
     }
 
 };

@@ -2,6 +2,7 @@ function ElevatorModel(elevatorNum) {
     this._elevatorNumber = elevatorNum;
     this._currentPosition = null;
     this._status = "inactive";
+    this._active = false; // TODO status값 교체하자...
     this._init()
 }
 

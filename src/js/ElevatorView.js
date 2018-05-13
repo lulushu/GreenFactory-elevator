@@ -10,14 +10,14 @@ ElevatorView.prototype = {
         var template = {
             elevator: _.template($('#elevator-template').html())
         };
-
         $(".content").html(template.elevator({floorLength: this._floorNumber, elevatorNumber: this._elevatorNumber}));
-
     },
 
     renderElevator: function (data) {
+        var reversedData;
         for (var elevator in data) {
-            $($("#" + elevator).find(".floor").get().reverse()).eq(data[elevator] - 1).addClass("elevator")
+            reversedData = $("#" + elevator).find(".floor").get().reverse();
+            $(reversedData).eq(data[elevator] - 1).addClass("elevator");
         }
     },
 
@@ -30,6 +30,15 @@ ElevatorView.prototype = {
     _assignElement: function () {
         this._$button = $("[data-elevator-btn]");
         this._$elevatorWrapper = $("[data-elevator-wrapper]");
+        this._$buttonWrapper = $("[data-btn-wrapper]");
+        this._$elevatorElements = {};
+        this._$buttonElements = {};
+        for (var i = 1; i <= this._elevatorNumber; i++) {
+            this._$elevatorElements[i] = this._$elevatorWrapper.find("#elevator" + i);
+        }
+        for (var j = 1; j <= this._floorNumber; j++) {
+            this._$buttonElements[j] = this._$buttonWrapper.find("[data-btn=" + j + "]");
+        }
     },
 
     _cacheEventHandlers: function () {
@@ -42,70 +51,68 @@ ElevatorView.prototype = {
     },
 
     _onClickButton: function (event) {
-        if ($(event.target).hasClass("active")) {
+        var $eventTarget = $(event.target);
+        if ($eventTarget.hasClass("active")) {
             return;
         }
-        var id = $(event.target).data("btn");
-        $(this).trigger({type: "clickButton", floor: id});
-        $(event.target).addClass("active");
+        var floorNumber = $eventTarget.data("btn");
+        $(this).trigger({type: "clickButton", floor: floorNumber});
+        $eventTarget.addClass("active");
     },
 
     activateElevator: function (elevatorNum, targetFloor, currentFloor) {
+        var distance = Math.abs((targetFloor - currentFloor));
         if (targetFloor > currentFloor) {
-
-            this.setIntervalX(currentFloor, targetFloor, elevatorNum)
+            this.setIntervalX(currentFloor, distance, elevatorNum)
         } else if (targetFloor < currentFloor) {
-
-            this.setIntervalY(currentFloor, targetFloor, elevatorNum)
+            this.setIntervalY(currentFloor, distance, elevatorNum)
         }
     },
 
-    setIntervalX: function (currentFloor, targetFloor, elevatorNum) {
+    setIntervalX: function (currentFloor, distance, elevatorNum) {
         var current = currentFloor;
-        var repetitions = Math.abs((targetFloor - currentFloor));
-        var x = 0;
+        var repetitions = 0;
         var self = this;
-        $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("active");
+        this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
         var intervalID = window.setInterval(function () {
-            console.log("interval")
+            console.log("interval"); // todo 확인용 삭제해야함
             current++;
-            $("[data-elevator=" + elevatorNum + "]").find("div").removeClass("elevator").removeClass("active");
-            $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("elevator").addClass("active");
-            if (++x === repetitions) {
-
+            self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
+            self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
+            if (++repetitions === distance) {
                 window.clearInterval(intervalID);
                 self._onArriveFloor(elevatorNum, current);
             }
         }, 1000);
     },
 
-    setIntervalY: function (currentFloor, targetFloor, elevatorNum) {
-        var repetitions = Math.abs((targetFloor - currentFloor));
+    setIntervalY: function (currentFloor, distance, elevatorNum) {
         var current = currentFloor;
-        var x = 0;
+        var repetitions = 0;
         var self = this;
-        $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("active");
-        var intervalID = window.setInterval(function () {
-            console.log("interval");
+        this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
+        var intervalID = window.setInterval(function () { //todo interval 파악하기..
+            console.log("interval"); // todo 확인용 삭제해야함
             current--;
-            $("[data-elevator=" + elevatorNum + "]").find("div").removeClass("elevator").removeClass("active");
-            $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + current + "]").addClass("elevator").addClass("active");
-            if (++x === repetitions) {
+            self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
+            self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
+            if (++repetitions === distance) {
                 window.clearInterval(intervalID);
                 self._onArriveFloor(elevatorNum, current);
             }
         }, 1000);
     },
 
-    onTheSameFloor: function(targetFloor){
-        setTimeout(function(){
-            $("[data-btn=" + targetFloor + "]").removeClass("active");
-        },0);
+    onTheSameFloor: function (targetFloor) {
+        var self = this;
+        setTimeout(function () {
+            self._$buttonElements[targetFloor].removeClass("active");
+        }, 0);
     },
 
     _onArriveFloor: function (elevatorNum, targetFloor) {
         $(this).trigger({type: "arrive" + elevatorNum, elevator: elevatorNum});
-        $("[data-btn=" + targetFloor + "]").removeClass("active");
-        $("[data-elevator=" + elevatorNum + "]").find("[data-floor=" + targetFloor + "]").removeClass("active");
+        this._$buttonElements[targetFloor].removeClass("active");
+        this._$elevatorElements[elevatorNum].find("[data-floor=" + targetFloor + "]").removeClass("active");
     }
 };

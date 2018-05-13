@@ -15,7 +15,7 @@
 
 
 <script type="text/template" id="elevator-template">
-    <div style="height:<%= floorLength*55 + 5 %>px;" class="column">
+    <div style="height:<%= floorLength*55 + 5 %>px;" class="column" data-btn-wrapper>
 
         <% for(var i= 1 ; i <= floorLength; i++) { %>
         <div class="buttonWrapper">
@@ -23,14 +23,15 @@
         </div>
         <% } %>
     </div>
-
-    <% for(var j =1 ; j<= elevatorNumber; j++) { %>
-    <div class="column elevatorWrapper" id="elevator<%= j %>" data-elevator-wrapper style="height:<%= floorLength*55 + 5 %>px;" data-elevator="<%= j %>">
-        <% for(var i= 1 ; i <= floorLength; i++) { %>
-        <div class="floor" data-floor="<%= floorLength+1-i %>"></div>
+    <div style="height:<%= floorLength*55 + 10 %>px; float: left;" data-elevator-wrapper>
+        <% for(var j =1 ; j<= elevatorNumber; j++) { %>
+        <div class="column elevatorColumn" id="elevator<%= j %>" style="height:<%= floorLength*55 + 5 %>px;">
+            <% for(var i= 1 ; i <= floorLength; i++) { %>
+            <div class="floor" data-floor="<%= floorLength+1-i %>"></div>
+            <% } %>
+        </div>
         <% } %>
     </div>
-    <% } %>
 </script>
 
 <script src="./src/js/library/jquery-3.3.1.min.js"></script>

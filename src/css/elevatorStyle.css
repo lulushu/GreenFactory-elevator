@@ -22,7 +22,9 @@ button {
     border-radius: 5px;
 }
 
-button:focus {outline:0;}
+button:focus {
+    outline: 0;
+}
 
 .container {
     width: 100%;
@@ -59,6 +61,6 @@ div.active {
     margin-top: 5px;
 }
 
-.elevatorWrapper {
+.elevatorColumn {
     border: 1px solid grey;
 }
