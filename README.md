@@ -12,7 +12,7 @@ Description: 버튼을 활성화 하려는 층의 숫자 ( 범위 : 1 ~ 생성�
   
  **Returns**: undefined  
   
-Example:   
+**Example**:   
 ```js 
 activateButton(4); 
 ```    
@@ -30,7 +30,7 @@ Description: 버튼의 활성화를 확인하려는 층의 숫자 ( 범위 : 1 ~
   
 **Returns**: Boolean    
   
-Example:  
+**Example**:  
 ```js 
 isButtonActivated(4);  //return true of false  
 ```
