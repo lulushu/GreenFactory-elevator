@@ -1,4 +1,4 @@
-# Elevator api document    
+# Elevator API document    
   
 ## activateButton() Function  
 **Description**: 입력한 층의 버튼을 활성화 시킨다.
