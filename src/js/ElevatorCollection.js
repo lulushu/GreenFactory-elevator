@@ -45,7 +45,7 @@ ElevatorCollection.prototype = {
     setInactive: function (event) {
         var self = this;
         setTimeout(function (event) {
-            self._setInactiveElevator(event.elevatorNum);
+            self._setInactiveElevator(event.elevatorID);
         }, 3000, event);
     },
 
@@ -68,10 +68,10 @@ ElevatorCollection.prototype = {
         var intervalID = setInterval(function () {
             var targetFloor = self._targetFloors[0];
             var nearestDistance = self._getNearestDistance(targetFloor, false);
-            var targetElevatorNumber = self._getTargetElevatorID(targetFloor, nearestDistance);
-            if (targetElevatorNumber !== null) {
+            var targetElevatorID = self._getTargetElevatorID(targetFloor, nearestDistance);
+            if (targetElevatorID !== null) {
                 clearInterval(intervalID);
-                self._notifyTargetElevator(targetElevatorNumber, targetFloor);
+                self._notifyTargetElevator(targetElevatorID, targetFloor);
                 self._targetFloors.shift();
             }
         }, 1000);
@@ -125,9 +125,9 @@ ElevatorCollection.prototype = {
     _findNearestElevator: function () {
         var targetFloor = this._targetFloors[0];
         var nearestDistance = this._getNearestDistance(targetFloor, false);
-        var targetElevatorNumber = this._getTargetElevatorID(targetFloor, nearestDistance);
-        if (targetElevatorNumber !== null) {
-            this._notifyTargetElevator(targetElevatorNumber, targetFloor);
+        var targetElevatorID = this._getTargetElevatorID(targetFloor, nearestDistance);
+        if (targetElevatorID !== null) {
+            this._notifyTargetElevator(targetElevatorID, targetFloor);
             this._targetFloors.shift();
         } else {
             this._findElevatorPerSecond();
@@ -148,19 +148,19 @@ ElevatorCollection.prototype = {
 
     /**
      * 움직이려는 elevator를 알려주고, model의 status active로 변경
-     * @param targetElevatorNumber
+     * @param targetElevatorID
      * @param targetFloor
      * @private
      */
-    _notifyTargetElevator: function (targetElevatorNumber, targetFloor) {
-        var modelData = this._elevators[targetElevatorNumber].get(['currentPosition']);
+    _notifyTargetElevator: function (targetElevatorID, targetFloor) {
+        var modelData = this._elevators[targetElevatorID].get(['currentPosition']);
         $(this).trigger({
             type: 'findElevator',
-            elevator: targetElevatorNumber,
+            elevator: targetElevatorID,
             floor: targetFloor,
             current: modelData.currentPosition
         });
-        this._elevators[targetElevatorNumber].set({currentPosition: targetFloor, status: 'active'});
+        this._elevators[targetElevatorID].set({currentPosition: targetFloor, status: 'active'});
     },
 
     /**

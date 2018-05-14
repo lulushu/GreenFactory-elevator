@@ -1,6 +1,7 @@
 /**
  * Created by wonseok on 2018. 5. 9..
  */
+
 function ElevatorView(ElevatorNumber, floorNumber) {
     this._elevatorNumber = ElevatorNumber;
     this._floorNumber = floorNumber;
@@ -16,21 +17,21 @@ ElevatorView.prototype = {
      */
     renderElevator: function (data) {
         var reversedData;
-        for (var elevatorNumber in data) {
-            reversedData = this._$elevatorElements[elevatorNumber].find(".floor").get().reverse();
-            $(reversedData).eq(data[elevatorNumber] - 1).addClass("elevator");
+        for (var elevatorID in data) {
+            reversedData = this._$elevatorElements[elevatorID].find(".floor").get().reverse();
+            $(reversedData).eq(data[elevatorID] - 1).addClass("elevator");
         }
     },
 
     /**
      * elevator 활성화
-     * @param elevatorNum
+     * @param elevatorID
      * @param targetFloor
      * @param currentFloor
      */
-    activateElevator: function (elevatorNum, targetFloor, currentFloor) {
+    activateElevator: function (elevatorID, targetFloor, currentFloor) {
         var distance = (currentFloor - targetFloor);
-        this._moveElevatorToTargetFloor(currentFloor, distance, elevatorNum)
+        this._moveElevatorToTargetFloor(currentFloor, distance, elevatorID)
     },
 
     /**
@@ -141,36 +142,35 @@ ElevatorView.prototype = {
      * elevator를 움직이는 method
      * @param currentFloor
      * @param distance
-     * @param elevatorNum
-     * @private
+     * @param elevatorID
      */
-    _moveElevatorToTargetFloor: function (currentFloor, distance, elevatorNum) {
+    _moveElevatorToTargetFloor: function (currentFloor, distance, elevatorID) {
         var current = currentFloor;
         var absoluteDistance = Math.abs(distance);
         var repetitions = 0;
         var criterion = distance > 0 ? -1 : 1;
         var self = this;
-        this._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("active");
+        this._$elevatorElements[elevatorID].find("[data-floor=" + current + "]").addClass("active");
         var intervalID = setInterval(function () {
             current += criterion;
-            self._$elevatorElements[elevatorNum].find("div").removeClass("elevator active");
-            self._$elevatorElements[elevatorNum].find("[data-floor=" + current + "]").addClass("elevator active");
+            self._$elevatorElements[elevatorID].find("div").removeClass("elevator active");
+            self._$elevatorElements[elevatorID].find("[data-floor=" + current + "]").addClass("elevator active");
             if (++repetitions === absoluteDistance) {
                 clearInterval(intervalID);
-                self._onArriveToTargetFloor(elevatorNum, current);
+                self._onArriveToTargetFloor(elevatorID, current);
             }
         }, 1000);
     },
 
     /**
      * elevator가 targetFloor로 도착시 알림
-     * @param elevatorNum
+     * @param elevatorID
      * @param targetFloor
      * @private
      */
-    _onArriveToTargetFloor: function (elevatorNum, targetFloor) {
-        $(this).trigger({type: "arrive" + elevatorNum, elevator: elevatorNum});
+    _onArriveToTargetFloor: function (elevatorID, targetFloor) {
+        $(this).trigger({type: "arrive" + elevatorID, elevator: elevatorID});
         this._$buttonElements[targetFloor].removeClass("active");
-        this._$elevatorElements[elevatorNum].find("[data-floor=" + targetFloor + "]").removeClass("active");
+        this._$elevatorElements[elevatorID].find("[data-floor=" + targetFloor + "]").removeClass("active");
     }
 };

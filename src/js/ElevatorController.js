@@ -1,6 +1,7 @@
 /**
  * Created by wonseok on 2018. 5. 9..
  */
+
 function ElevatorController(ElevatorNumber, floorNumber) {
     if (ElevatorNumber > 4 || ElevatorNumber < 2) {
         return;
@@ -116,7 +117,7 @@ ElevatorController.prototype = {
      * @private
      */
     _onArriveToTargetFloor: function (event) {
-        this._oCollection.setInactive({elevatorNum: event.elevator});
+        this._oCollection.setInactive({elevatorID: event.elevator});
     }
 
 };

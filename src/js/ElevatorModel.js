@@ -1,8 +1,9 @@
 /**
  * Created by wonseok on 2018. 5. 9..
  */
-function ElevatorModel(elevatorNum) {
-    this._elevatorID = elevatorNum;
+
+function ElevatorModel(elevatorID) {
+    this._elevatorID = elevatorID;
     this._currentPosition = null;
     this._status = null;
     this._init()
