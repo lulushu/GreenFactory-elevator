@@ -1,19 +1,30 @@
+/**
+ * Created by wonseok on 2018. 5. 9..
+ */
 function ElevatorModel(elevatorNum) {
-    this._elevatorNumber = elevatorNum;
+    this._elevatorID = elevatorNum;
     this._currentPosition = null;
     this._status = null;
-    this._active = false; // TODO status값 교체하자...
     this._init()
 }
 
 ElevatorModel.prototype = {
 
+    /**
+     * setter
+     * @param dataObject
+     */
     set: function (dataObject) {
         for (var property in dataObject) {
             this["_" + property] = dataObject[property];
         }
     },
 
+    /**
+     * getter
+     * @param dataArray
+     * @returns {{}}
+     */
     get: function (dataArray) {
         var dataProperty = {};
         for (var i = 0; i < dataArray.length; i++) {
@@ -22,6 +33,10 @@ ElevatorModel.prototype = {
         return dataProperty;
     },
 
+    /**
+     * 초기화
+     * @private
+     */
     _init: function () {
         this._currentPosition = 1;
         this._status = 'inactive';
