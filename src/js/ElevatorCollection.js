@@ -106,7 +106,6 @@ ElevatorCollection.prototype = {
      * @returns {any}
      * @private
      */
-
     _getTargetElevatorID: function (targetFloor, nearestDistance) {
         var movableElevators = [];
         var modelData;
