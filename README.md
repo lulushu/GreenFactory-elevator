@@ -8,7 +8,7 @@
   **Parameter**
   - `targetFloor`  
 *Type: Integer      
-Description: 버튼을 활성화 하려는 층의 숫자 ( 범위 1 ~ 생성된 층수 )*    
+Description: 버튼을 활성화 하려는 층의 숫자 ( 범위: 1 ~ 생성된 층수 )*    
   
  **Returns**: undefined  
   
@@ -26,7 +26,7 @@ activateButton(4);
 **Parameter**
 - `targetFloor`  
 *Type: Integer      
-Description: 버튼의 활성화를 확인하려는 층의 숫자 ( 범위 1 ~ 생성된 층수 )*    
+Description: 버튼의 활성화를 확인하려는 층의 숫자 ( 범위: 1 ~ 생성된 층수 )*    
   
 **Returns**: Boolean    
   
