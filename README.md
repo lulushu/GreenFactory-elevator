@@ -1,7 +1,8 @@
 # Elevator api document    
   
 ## activateButton() Function  
-**Description**: 입력한 층의 버튼을 활성화 시킨다.    
+**Description**: 입력한 층의 버튼을 활성화 시킨다.
+    
  **Syntax**: `activateButton( targetFloor )`
  
   **Parameter**
@@ -18,7 +19,8 @@ activateButton(4);
 
  ## isButtonActivated() Function      
   
-**Description**: 입력한 층의 버튼이 활성화됐는지 여부를 리턴한다.    
+**Description**: 입력한 층의 버튼이 활성화됐는지 여부를 리턴한다.
+    
 **Syntax**:  `isButtonActivated( targetFloor )`    
 
 **Parameter**
