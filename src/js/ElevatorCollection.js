@@ -66,7 +66,6 @@ ElevatorCollection.prototype = {
     _findElevatorPerSecond: function () {
         var self = this;
         var intervalID = setInterval(function () {
-            console.log("interval"); //todo 삭제 확인용
             var targetFloor = self._targetFloors[0];
             var nearestDistance = self._getNearestDistance(targetFloor, false);
             var targetElevatorNumber = self._getTargetElevatorID(targetFloor, nearestDistance);
@@ -97,7 +96,6 @@ ElevatorCollection.prototype = {
                 distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
             }
         }
-        console.log("거리값들", distanceValues);
         return Math.min.apply(null, distanceValues);
     },
 

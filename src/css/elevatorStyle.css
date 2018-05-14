@@ -30,7 +30,7 @@ button:focus {
     width: 250px;
     height: 60px;
     float: left;
-    margin: auto;
+    margin-left: 50px;
     margin-top: 10%;
     padding: 10px;
     background: lightgoldenrodyellow;
