@@ -21,6 +21,8 @@ var Elevator = new ElevatorController(4,5);
 ## .activateButton( targetFloorNumber )  
   
 **Description**: ElevatorController instance의 method로, 입력한 층의 버튼을 활성화 시킨다.
+
+- **Returns**: undefined
   
 - **targetFloorNumber**    
 Type: Integer    

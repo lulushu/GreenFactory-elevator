@@ -6,3 +6,12 @@ $(document).ready(function () {
         elevator = new ElevatorController(elevatorNum, floorNum);
     })
 });
+
+
+window.activateButton = function (i) {
+    elevator.activateButton(i);
+};
+
+window.isButtonActivated = function (i) {
+    return elevator.isButtonActivated(i);
+};
