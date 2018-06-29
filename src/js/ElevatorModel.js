@@ -1,28 +1,45 @@
-function ElevatorModel(elevatorNum) {
-    this._elevatorNumber = elevatorNum;
+/**
+ * Created by wonseok on 2018. 5. 9..
+ */
+
+function ElevatorModel(elevatorID) {
+    this._elevatorID = elevatorID;
     this._currentPosition = null;
-    this._status = "inactive";
-    this.isMoiving = false;
+    this._status = null;
     this._init()
 }
 
 ElevatorModel.prototype = {
-    _init: function () {
-        this._currentPosition = 1;
-    },
 
+    /**
+     * setter
+     * @param dataObject
+     */
     set: function (dataObject) {
         for (var property in dataObject) {
             this["_" + property] = dataObject[property];
         }
     },
 
+    /**
+     * getter
+     * @param dataArray
+     * @returns {{}}
+     */
     get: function (dataArray) {
         var dataProperty = {};
         for (var i = 0; i < dataArray.length; i++) {
             dataProperty[dataArray[i]] = this["_" + dataArray[i]]
         }
         return dataProperty;
-    }
+    },
 
+    /**
+     * 초기화
+     * @private
+     */
+    _init: function () {
+        this._currentPosition = 1;
+        this._status = 'inactive';
+    }
 };

@@ -1,183 +1,176 @@
+/**
+ * Created by wonseok on 2018. 5. 9..
+ */
+
 function ElevatorCollection(ElevatorNumber) {
     this._elevatorNumber = ElevatorNumber;
-    this.elevators = {};
-    this.targetFloors = [];
+    this._elevators = {};
+    this._targetFloors = [];
     this._init();
 }
 
 ElevatorCollection.prototype = {
-    _init: function () {
-        var elevators = {};
-        for (var i = 1; i <= this._elevatorNumber; i++) {
-            elevators["elevator" + i] = new ElevatorModel(i);
-        }
-        this.elevators = elevators;
-    },
 
-    getInitialPostion: function () {
+    /**
+     * 초기 엘리베이터 위치값 리턴
+     * @returns {{}}
+     */
+    getInitialPosition: function () {
         var position = {};
         var modelData;
-        for (var elevator in this.elevators) {
-            modelData = this.elevators[elevator].get(['currentPosition']);
-            position[elevator] = modelData.currentPosition;
+        for (var ID in this._elevators) {
+            modelData = this._elevators[ID].get(['currentPosition']);
+            position[ID] = modelData.currentPosition;
         }
         return position;
     },
 
-    pushTargetFloor: function (targetFloorNum) {
-        this.targetFloors.push(targetFloorNum); //분리해야 할것 같음...
-        this.findNearestElevator(this.targetFloors[0]);
-        console.log(this.targetFloors);
+    /**
+     * targetFloor로 이동할수 있는 elevator를 찾는다.
+     * @param targetFloorNum
+     */
+    deliverTargetFloor: function (targetFloorNum) {
+        if (this._getNearestDistance(targetFloorNum, true) === 0) {
+            this._notifyAlreadyElevatorArrived(targetFloorNum);
+            return;
+        }
+        this._targetFloors.push(targetFloorNum);
+        this._findNearestElevator(this._targetFloors[0]);
     },
 
-    findElevator1: function () {
+    /**
+     * 도착한 elevator의 status값 변경
+     * @param event
+     */
+    setInactive: function (event) {
         var self = this;
-        var intervalID = window.setInterval(function () {
-            console.log(intervalID);
-            console.log("modelInterval");
-            var targetFloor = self.targetFloors[0];
-            var nearestDistance = self._getNearestDistance2(targetFloor);
-            var targetElevatorNumber = self._getTargetElevatorNumber(targetFloor, nearestDistance);
-            console.log("가까운거리", nearestDistance);
-            console.log("엘리베이터", targetElevatorNumber);
-            if (targetElevatorNumber !== null) {
-                window.clearInterval(intervalID);
-                self._notifyTargetElevator(targetElevatorNumber, targetFloor);
-                self.targetFloors.shift();
-            }
+        setTimeout(function (event) {
+            self._setInactiveElevator(event.elevatorID);
+        }, 3000, event);
+    },
 
+    /**
+     * 초기화
+     * @private
+     */
+    _init: function () {
+        for (var ID = 1; ID <= this._elevatorNumber; ID++) {
+            this._elevators[ID] = new ElevatorModel(ID);
+        }
+    },
+
+    /**
+     * 비활성화 상태의 elevator가 더이상 없을때, 1초마다 비활성화 상태의 elevator를 찾는다.
+     * @private
+     */
+    _findElevatorPerSecond: function () {
+        var self = this;
+        var intervalID = setInterval(function () {  // TODO model로 부터 event를 받아서 활성화 상태의 엘리베이터 찾는것으로 바꿀예정
+            var targetFloor = self._targetFloors[0];
+            var nearestDistance = self._getNearestDistance(targetFloor, false);
+            var targetElevatorID = self._getTargetElevatorID(targetFloor, nearestDistance);
+            if (targetElevatorID !== null) {
+                clearInterval(intervalID);
+                self._notifyTargetElevator(targetElevatorID, targetFloor);
+                self._targetFloors.shift();
+            }
         }, 1000);
     },
 
-    _getNearestDistance2: function (targetFloor) {
+
+    /**
+     * targetFloor와 가까운 elevator의 거리를 구한다.
+     * @param targetFloor
+     * @param criterion
+     * @returns {number}
+     * @private
+     */
+    _getNearestDistance: function (targetFloor, criterion) {
         var distanceValues = [];
         var modelData;
-        for (var elevator1 in this.elevators) {
-            modelData = this.elevators[elevator1].get(['status', 'currentPosition']);
-            var object = {};
-            if (this.elevators[elevator1]._status === 'inactive') {
-                object["distance"] = Math.abs(targetFloor - modelData.currentPosition);
-                object["elevator"] = elevator1;
-                distanceValues.push(object);
+        for (var ID in this._elevators) {
+            modelData = this._elevators[ID].get(['status', 'currentPosition']);
+            if (criterion) {
+                distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
+            } else if (modelData.status === 'inactive') {
+                distanceValues.push(Math.abs(targetFloor - modelData.currentPosition));
             }
         }
-
-        distanceValues.sort(function (a, b) {
-            if (a["distance"] < b["distance"]) return -1;
-            if (a["distance"] > b["distance"]) return 1;
-            return 0;
-        });
-        console.log(distanceValues);
-        return distanceValues;
+        return Math.min.apply(null, distanceValues);
     },
 
-
-    _getNearestDistance: function (targetFloor) {
-        var distanceValues = [];
-        var modelData;
-        for (var elevator1 in this.elevators) {
-            modelData = this.elevators[elevator1].get(['status', 'currentPosition']);
-            var object = {};
-            if (this.elevators[elevator1].isMoiving === false) {
-                object["distance"] = Math.abs(targetFloor - modelData.currentPosition);
-                object["elevator"] = elevator1;
-                distanceValues.push(object);
-            }
-        }
-        console.log(distanceValues);
-        distanceValues.sort(function (a, b) {
-            if (a["distance"] < b["distance"]) return -1;
-            if (a["distance"] > b["distance"]) return 1;
-            return 0;
-        });
-        console.log(distanceValues);
-        return distanceValues;
-    },
-
-    _getTargetElevatorNumber: function (targetFloor, nearestDistance) {
+    /**
+     * 가장 가까운 거리의 elevator의 ID를 구한다.
+     * @param targetFloor
+     * @param nearestDistance
+     * @returns {any}
+     * @private
+     */
+    _getTargetElevatorID: function (targetFloor, nearestDistance) {
         var movableElevators = [];
         var modelData;
-        var distanceArray = [];
-        var distance;
-        var array = nearestDistance;
-        var elevatorNum;
-        for (var i = 0; i < nearestDistance.length; i++) {
-            elevatorNum = array[i].elevator;
-            console.log(elevatorNum);
-            if (this.elevators[elevatorNum]._status === 'inactive') {
-                distanceArray.push(array[i].distance);
+        for (var ID in this._elevators) {
+            modelData = this._elevators[ID].get(['status', 'currentPosition', 'elevatorID']);
+            if (Math.abs(targetFloor - modelData.currentPosition) === nearestDistance && modelData.status === 'inactive') {
+                movableElevators.push(modelData.elevatorID);
             }
         }
-        distance = Math.min.apply(Math, distanceArray); //distanceArray length 가 0인 경우 값은 infinity
-        for (var elevator2 in this.elevators) {
-            modelData = this.elevators[elevator2].get(['status', 'currentPosition', 'elevatorNumber']);
-            if (Math.abs(targetFloor - modelData.currentPosition) == distance && modelData.status === 'inactive') {
-                movableElevators.push(modelData.elevatorNumber);
-            }
-        }
-        if (movableElevators.length > 0) {
-            return Math.min.apply(Math, movableElevators);
+        return (movableElevators.length > 0) ? Math.min.apply(null, movableElevators) : null;
+    },
+
+    /**
+     * 가장 가까운 elevator를 찾는다.
+     * @private
+     */
+    _findNearestElevator: function () {
+        var targetFloor = this._targetFloors[0];
+        var nearestDistance = this._getNearestDistance(targetFloor, false);
+        var targetElevatorID = this._getTargetElevatorID(targetFloor, nearestDistance);
+        if (targetElevatorID !== null) {
+            this._notifyTargetElevator(targetElevatorID, targetFloor);
+            this._targetFloors.shift();
         } else {
-            return null;
+            this._findElevatorPerSecond();
         }
-
     },
 
-    findNearestElevator: function () {
-        var targetFloor = this.targetFloors[0];
-        var nearestDistance = this._getNearestDistance(targetFloor);
-        if (nearestDistance.length === 0) {
-            this.findElevator1();
-            return;
-        }
-
-        if (nearestDistance[0].distance === 0) {
-            this._notifyAlreadyArriveElevator(targetFloor);
-            this.targetFloors.shift();
-            return;
-        }
-        var targetElevatorNumber = this._getTargetElevatorNumber(targetFloor, nearestDistance);
-        console.log("가까운거리", nearestDistance);
-        console.log("엘리베이터", targetElevatorNumber);
-
-        if (targetElevatorNumber !== null) {
-            this._notifyTargetElevator(targetElevatorNumber, targetFloor);
-            this.targetFloors.shift();
-        }
-        // } else {
-        //     this.findElevator1();
-        // }
-    },
-
-    _notifyAlreadyArriveElevator: function (targetFloor) {
+    /**
+     * targetFloor에 이미 elevator 있다고 알림
+     * @param targetFloor
+     * @private
+     */
+    _notifyAlreadyElevatorArrived: function (targetFloor) {
         $(this).trigger({
-            type: 'alreadyArriveElevator',
+            type: 'alreadyArrive',
             floor: targetFloor
         });
     },
 
-    _notifyTargetElevator: function (targetElevatorNumber, targetFloor) {
-        var modelData = this.elevators["elevator" + targetElevatorNumber].get(['currentPosition']);
+    /**
+     * 움직이려는 elevator를 알려주고, model의 status active로 변경
+     * @param targetElevatorID
+     * @param targetFloor
+     * @private
+     */
+    _notifyTargetElevator: function (targetElevatorID, targetFloor) {
+        var modelData = this._elevators[targetElevatorID].get(['currentPosition']);
         $(this).trigger({
             type: 'findElevator',
-            elevator: targetElevatorNumber,
+            elevator: targetElevatorID,
             floor: targetFloor,
             current: modelData.currentPosition
         });
-        this.elevators["elevator" + targetElevatorNumber].set({currentPosition: targetFloor, status: 'active'});
-        this.elevators["elevator" + targetElevatorNumber].isMoiving = true;
+        this._elevators[targetElevatorID].set({currentPosition: targetFloor, status: 'active'});
     },
 
-    setActive: function (event) {
-        this.elevators["elevator" + event.elevatorNum].isMoiving = false;
-        setTimeout($.proxy(function (event) {
-            this.addActiveElevator(event.elevatorNum);
-        }, this), 3000, event);
-    },
-
-    addActiveElevator: function (elevatorNum) {
-        console.log("add");
-        this.elevators["elevator" + elevatorNum].set({status: 'inactive'})
+    /**
+     * elevatorModel status를 inactive로 변경
+     * @param elevatorNum
+     * @private
+     */
+    _setInactiveElevator: function (elevatorNum) {
+        this._elevators[elevatorNum].set({status: 'inactive'})
     }
+
 };
 
