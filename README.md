@@ -34,6 +34,3 @@ Description: 버튼의 활성화를 확인하려는 층의 숫자 ( 범위 : 1 ~
 ```js 
 isButtonActivated(4);  //return true or false  
 ```
-
-
-test
