@@ -19,6 +19,33 @@ function ElevatorController(ElevatorNumber, floorNumber) {
 ElevatorController.prototype = {
 
     /**
+     * floorNumber의 버튼을 활성화
+     * @param floorNumber
+     */
+    activateButton: function (floorNumber) {
+        var targetFloorNumber = parseInt(floorNumber);
+        if (targetFloorNumber <= 0 || targetFloorNumber > this._floorNumber) {
+            console.log("not valid number");
+            return;
+        }
+        this._oView.activateButton(floorNumber);
+    },
+
+    /**
+     * button의 활성화 여부 리턴
+     * @param floorNumber
+     * @returns {*}
+     */
+    isButtonActivated: function (floorNumber) {
+        var targetFloorNumber = parseInt(floorNumber);
+        if (targetFloorNumber <= 0 || targetFloorNumber > this._floorNumber) {
+            console.log("not valid number");
+            return false;
+        }
+        return this._oView.isButtonActivated(floorNumber);
+    },
+
+    /**
      * 초기화
      * @private
      */
