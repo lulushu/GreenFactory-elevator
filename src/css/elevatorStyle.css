@@ -91,4 +91,5 @@ button#render {
     right: 0;
     top: 10%;
     background-color: palegreen;
+    width: 400px;
 }

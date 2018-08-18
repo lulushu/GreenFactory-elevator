@@ -39,10 +39,9 @@ ElevatorView.prototype = {
      * @param targetFloor
      */
     deactivateTargetButton: function (targetFloor) {
-        var self = this;
         setTimeout(function () {
-            self._$buttonElements[targetFloor].removeClass("active");
-        }, 0);
+            this._$buttonElements[targetFloor].removeClass("active")
+        }.bind(this), 0);
     },
 
     /**
@@ -149,17 +148,16 @@ ElevatorView.prototype = {
         var absoluteDistance = Math.abs(distance);
         var repetitions = 0;
         var criterion = distance > 0 ? -1 : 1;
-        var self = this;
         this._$elevatorElements[elevatorID].find("[data-floor=" + current + "]").addClass("active");
         var intervalID = setInterval(function () {   //TODO requestAnimationFrame 으로 바꿀예정
             current += criterion;
-            self._$elevatorElements[elevatorID].find("div").removeClass("elevator active");
-            self._$elevatorElements[elevatorID].find("[data-floor=" + current + "]").addClass("elevator active");
+            this._$elevatorElements[elevatorID].find("div").removeClass("elevator active");
+            this._$elevatorElements[elevatorID].find("[data-floor=" + current + "]").addClass("elevator active");
             if (++repetitions === absoluteDistance) {
                 clearInterval(intervalID);
-                self._onArriveToTargetFloor(elevatorID, current);
+                this._onArriveToTargetFloor(elevatorID, current);
             }
-        }, 1000);
+        }.bind(this), 1000);
     },
 
     /**

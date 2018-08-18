@@ -43,10 +43,7 @@ ElevatorCollection.prototype = {
      * @param event
      */
     setInactive: function (event) {
-        var self = this;
-        setTimeout(function (event) {
-            self._setInactiveElevator(event.elevatorID);
-        }, 3000, event);
+        setTimeout(this._setInactiveElevator.bind(this, event.elevatorID), 3000);
     },
 
     /**
@@ -64,17 +61,16 @@ ElevatorCollection.prototype = {
      * @private
      */
     _findElevatorPerSecond: function () {
-        var self = this;
         var intervalID = setInterval(function () {  // TODO model로 부터 event를 받아서 활성화 상태의 엘리베이터 찾는것으로 바꿀예정
-            var targetFloor = self._targetFloors[0];
-            var nearestDistance = self._getNearestDistance(targetFloor, false);
-            var targetElevatorID = self._getTargetElevatorID(targetFloor, nearestDistance);
+            var targetFloor = this._targetFloors[0];
+            var nearestDistance = this._getNearestDistance(targetFloor, false);
+            var targetElevatorID = this._getTargetElevatorID(targetFloor, nearestDistance);
             if (targetElevatorID !== null) {
                 clearInterval(intervalID);
-                self._notifyTargetElevator(targetElevatorID, targetFloor);
-                self._targetFloors.shift();
+                this._notifyTargetElevator(targetElevatorID, targetFloor);
+                this._targetFloors.shift();
             }
-        }, 1000);
+        }.bind(this), 1000);
     },
 
 
