@@ -2,9 +2,9 @@
 
 DEMO: https://htmlpreview.github.io/?https://github.com/lulushu/GreenFactory-elevator/blob/master/index.html
 
-# Elevator API   
+## Elevator API   
   
-## activateButton() Function  
+### - activateButton() Function  
 **Description**: 입력한 층의 버튼을 활성화 시킨다.
     
  **Syntax**: `activateButton( targetFloor )`
@@ -21,7 +21,7 @@ Description: 버튼을 활성화 하려는 층의 숫자 ( 범위 : 1 ~ 생성�
 activateButton(4); 
 ```    
 
-## isButtonActivated() Function      
+### - isButtonActivated() Function      
   
 **Description**: 입력한 층의 버튼이 활성화됐는지 여부를 리턴한다.
     
